@@ -6,13 +6,13 @@
 Macro macros[MAX_MACROS];
 int macro_count = 0;
 
-// Check whether character is part of an identifier
+//check whether character is part of an identifier
 int is_id_char(int ch)
 {
     return isalnum((unsigned char)ch) || ch == '_';
 }
 
-// Find macro
+//find macro
 int find_macro(char name[])
 {
     int i;
@@ -26,7 +26,7 @@ int find_macro(char name[])
     return -1;
 }
 
-// Add macro
+//add macro
 void add_macro(char line[])
 {
     char name[50];
@@ -45,7 +45,7 @@ void add_macro(char line[])
     while (isspace((unsigned char)*p))
         p++;
 
-    // Read macro name
+    //read macro name
     while (is_id_char(*p) && i < 49)
         name[i++] = *p++;
 
@@ -69,7 +69,7 @@ void add_macro(char line[])
     strcpy(m->name, name);
     m->arg_count = 0;
 
-    // Function-like macro
+    //function-like macro
     if (*p == '(')
     {
         m->is_function = 1;
@@ -105,18 +105,18 @@ void add_macro(char line[])
     }
     else
     {
-        // Object-like macro
+        //object-like macro
         m->is_function = 0;
     }
 
-    // Skip spaces before macro value
+    //skip spaces before macro value
     while (*p == ' ' || *p == '\t')
         p++;
 
     strncpy(m->value, p, sizeof(m->value) - 1);
     m->value[sizeof(m->value) - 1] = '\0';
 
-    // Remove newline
+    //remove newline
     j = strlen(m->value);
 
     while (j > 0 &&
@@ -126,7 +126,7 @@ void add_macro(char line[])
     }
 }
 
-// Read function macro arguments
+//read function macro arguments
 int read_arguments(char **p, char args[10][200], int *count)
 {
     int n = 0, j = 0;
@@ -218,7 +218,7 @@ int read_arguments(char **p, char args[10][200], int *count)
     return 0;
 }
 
-// Replace parameters in function macro
+//replace parameters in function macro
 void expand_function(int index, char args[10][200], FILE *dest)
 {
     char *p = macros[index].value;
@@ -259,7 +259,7 @@ void expand_function(int index, char args[10][200], FILE *dest)
     }
 }
 
-// Substitute macros
+//substitute macros
 void substitute_line(char line[], FILE *dest)
 {
     char word[100];
@@ -319,7 +319,7 @@ void substitute_line(char line[], FILE *dest)
                 continue;
             }
 
-            // Object-like macro
+            //object-like macro
             if (!macros[index].is_function)
             {
                 fputs(macros[index].value, dest);
@@ -352,7 +352,7 @@ void substitute_line(char line[], FILE *dest)
     }
 }
 
-// Main macro handler
+//main macro handler
 void macro_handler(FILE *src, FILE *dest)
 {
     char line[4096];
